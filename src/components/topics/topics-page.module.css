@@ -1,0 +1,23 @@
+.wrapper {
+  background-color: rgb(155, 153, 153);
+  width: 100vw;
+}
+
+.links {
+  list-style: none;
+}
+
+.link {
+  color: #0a5164;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #0f7896;
+}
+
+.heading {
+  font-size: 35px;
+}
