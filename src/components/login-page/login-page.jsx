@@ -1,40 +1,57 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
+import { Redirect, useHistory } from "react-router-dom";
+import { useAuth } from "../provide-auth/provide-auth";
 import styles from "./login-page.module.css";
 
 export const LoginPage = () => {
-  const login = "123";
+  const history = useHistory();
+  const auth = useAuth();
+  const [logout, setLogout] = useState({ email: "", password: "" });
 
-  const [logout, setLogout] = useState(false);
-
-  const ref = useRef();
-
-  const checkLogin = (e) => {
-    e.preventDefault();
-    if (ref.current.value === login) {
-      setLogout(!logout);
-    }
+  const onChange = (e) => {
+    setLogout({ ...logout, [e.target.name]: e.target.value });
   };
 
-  const outClick = () => {
-    setLogout(!logout);
-  };
+  const login = useCallback(
+    (e) => {
+      e.preventDefault();
+      auth.signIn(() => {
+        history.replace({ pathname: "/topics" });
+      });
+    },
+    [auth, history]
+  );
+
+  if (auth.user) {
+    return (
+      <Redirect
+        to={{
+          pathname: "/",
+        }}
+      />
+    );
+  }
 
   return (
     <div className={styles.wrapper}>
-      {(!logout && (
-        <form className={styles.form}>
-          <h1 className={styles.heading}>Вход</h1>
-          <input ref={ref} type="text" name="login" id="login" />
-          <button onClick={checkLogin} type="submit">
-            Войти
-          </button>
-        </form>
-      )) || (
-        <>
-          <div style={{ fontSize: 40 }}>Добро пожаловать!</div>
-          <button onClick={outClick}>Выход</button>
-        </>
-      )}
+      <form className={styles.form}>
+        <h1 className={styles.heading}>Вход</h1>
+        <input
+          type="email"
+          placeholder="Email"
+          value={logout.email}
+          name="email"
+          onChange={onChange}
+        />
+        <input
+          type="password"
+          placeholder="Пароль"
+          value={logout.password}
+          name="password"
+          onChange={onChange}
+        />
+        <button onClick={login}>Войти</button>
+      </form>
     </div>
   );
 };

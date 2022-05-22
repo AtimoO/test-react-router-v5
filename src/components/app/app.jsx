@@ -1,57 +1,38 @@
 import React from "react";
-import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import Header from "../header/header";
 
 import { HomePage } from "../home-page/home-page";
 import { LoginPage } from "../login-page/login-page";
 import { ProtectedPage } from "../protected-page/protected-page";
+import { ProvideAuth } from "../provide-auth/provide-auth";
 import { TopicsPage } from "../topics/topics-page";
 
 import "./app.css";
 
 function App() {
   return (
-    <div className="app">
-      <header className="app-header">
-        <ul className="app-links">
-          <li>
-            <a className="app-link" href="/">
-              General page
-            </a>
-          </li>
-          <li>
-            <a className="app-link" href="/topics">
-              Topics
-            </a>
-          </li>
-          <li>
-            <a className="app-link" href="/products">
-              Products
-            </a>
-          </li>
-          <li>
-            <a className="app-link" href="/login">
-              Войти
-            </a>
-          </li>
-        </ul>
-      </header>
-      <main className="main">
-        <Switch>
-          <Route path="/" exact>
-            <HomePage />
-          </Route>
-          <Route path="/products" exact>
-            <ProtectedPage />
-          </Route>
-          <Route path="/topics">
-            <TopicsPage />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-        </Switch>
-      </main>
-    </div>
+    <ProvideAuth>
+      <div className="app">
+        <Header />
+        <main className="main">
+          <Switch>
+            <Route path="/" exact>
+              <HomePage />
+            </Route>
+            <Route path="/products" exact>
+              <ProtectedPage />
+            </Route>
+            <Route path="/topics">
+              <TopicsPage />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+          </Switch>
+        </main>
+      </div>
+    </ProvideAuth>
   );
 }
 
