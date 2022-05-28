@@ -3,6 +3,10 @@
   width: 100vw;
 }
 
+.form {
+  border: 1px solid red;
+}
+
 .heading {
   font-size: 35px;
 }

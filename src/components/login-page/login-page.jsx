@@ -1,40 +1,51 @@
-import React, { useRef, useState } from "react";
+import React, { useCallback, useState } from "react";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { fakeAuth } from "../../utils/fakeApi";
+import { useAuth } from "../provide-auth/provide-auth";
 import styles from "./login-page.module.css";
 
 export const LoginPage = () => {
-  const login = "123";
+  const [redirect, setRedirect] = useState(false);
+  const { state } = useLocation();
 
-  const [logout, setLogout] = useState(false);
+  console.log(state);
 
-  const ref = useRef();
-
-  const checkLogin = (e) => {
+  const login = (e) => {
     e.preventDefault();
-    if (ref.current.value === login) {
-      setLogout(!logout);
-    }
+    fakeAuth.signIn(() => {
+      setRedirect(true);
+    });
   };
 
-  const outClick = () => {
-    setLogout(!logout);
+  const logout = () => {
+    fakeAuth.signOut(() => {
+      setRedirect(false);
+    });
   };
+
+  if (redirect) {
+    return <Redirect to={state?.from || "/"} />;
+  }
 
   return (
     <div className={styles.wrapper}>
-      {(!logout && (
-        <form className={styles.form}>
-          <h1 className={styles.heading}>Вход</h1>
-          <input ref={ref} type="text" name="login" id="login" />
-          <button onClick={checkLogin} type="submit">
-            Войти
-          </button>
-        </form>
-      )) || (
-        <>
-          <div style={{ fontSize: 40 }}>Добро пожаловать!</div>
-          <button onClick={outClick}>Выход</button>
-        </>
-      )}
+      <div className={styles.form}>
+        <h1 className={styles.heading}>Вход</h1>
+        <input
+          type="email"
+          placeholder="Email"
+          value={logout.email}
+          name="email"
+        />
+        <input
+          type="password"
+          placeholder="Пароль"
+          value={logout.password}
+          name="password"
+        />
+        <button onClick={login}>Войти</button>
+        <button onClick={logout}>Закрыть</button>
+      </div>
     </div>
   );
 };
