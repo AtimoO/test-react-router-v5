@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -15,9 +16,9 @@ const Header = () => {
           </a>
         </li>
         <li>
-          <a className="app-link" href="/products">
+          <Link className="app-link" to="/products">
             Products
-          </a>
+          </Link>
         </li>
         <li>
           <a className="app-link" href="/login">

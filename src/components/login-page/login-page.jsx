@@ -1,57 +1,51 @@
 import React, { useCallback, useState } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect, useHistory, useLocation } from "react-router-dom";
+import { fakeAuth } from "../../utils/fakeApi";
 import { useAuth } from "../provide-auth/provide-auth";
 import styles from "./login-page.module.css";
 
 export const LoginPage = () => {
-  const history = useHistory();
-  const auth = useAuth();
-  const [logout, setLogout] = useState({ email: "", password: "" });
+  const [redirect, setRedirect] = useState(false);
+  const { state } = useLocation();
 
-  const onChange = (e) => {
-    setLogout({ ...logout, [e.target.name]: e.target.value });
+  console.log(state);
+
+  const login = (e) => {
+    e.preventDefault();
+    fakeAuth.signIn(() => {
+      setRedirect(true);
+    });
   };
 
-  const login = useCallback(
-    (e) => {
-      e.preventDefault();
-      auth.signIn(() => {
-        history.replace({ pathname: "/topics" });
-      });
-    },
-    [auth, history]
-  );
+  const logout = () => {
+    fakeAuth.signOut(() => {
+      setRedirect(false);
+    });
+  };
 
-  if (auth.user) {
-    return (
-      <Redirect
-        to={{
-          pathname: "/",
-        }}
-      />
-    );
+  if (redirect) {
+    return <Redirect to={state?.from || "/"} />;
   }
 
   return (
     <div className={styles.wrapper}>
-      <form className={styles.form}>
+      <div className={styles.form}>
         <h1 className={styles.heading}>Вход</h1>
         <input
           type="email"
           placeholder="Email"
           value={logout.email}
           name="email"
-          onChange={onChange}
         />
         <input
           type="password"
           placeholder="Пароль"
           value={logout.password}
           name="password"
-          onChange={onChange}
         />
         <button onClick={login}>Войти</button>
-      </form>
+        <button onClick={logout}>Закрыть</button>
+      </div>
     </div>
   );
 };

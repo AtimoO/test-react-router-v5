@@ -5,6 +5,7 @@ import Header from "../header/header";
 import { HomePage } from "../home-page/home-page";
 import { LoginPage } from "../login-page/login-page";
 import { ProtectedPage } from "../protected-page/protected-page";
+import { ProtectedRoute } from "../protected-route/protected-route";
 import { ProvideAuth } from "../provide-auth/provide-auth";
 import { TopicsPage } from "../topics/topics-page";
 
@@ -20,14 +21,17 @@ function App() {
             <Route path="/" exact>
               <HomePage />
             </Route>
-            <Route path="/products" exact>
+            <ProtectedRoute path="/products">
               <ProtectedPage />
-            </Route>
+            </ProtectedRoute>
             <Route path="/topics">
               <TopicsPage />
             </Route>
             <Route path="/login">
               <LoginPage />
+            </Route>
+            <Route path="*">
+              <p>NOT FOUND</p>
             </Route>
           </Switch>
         </main>
